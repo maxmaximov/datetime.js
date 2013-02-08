@@ -1,6 +1,14 @@
 (function (date) {
     "use strict";
 
+    /**
+     * Класс представляет недели месяца
+     *
+     * @class Класс представляет недели месяца
+     * @augments date.ACalendar
+     * @param {date.Month|String|Date|DateTime|int|null} [initDate]
+     * @author Max Maximov <max.maximov@gmail.com>
+     */
     date.MonthWeeks = function (initDate) {
         if (initDate instanceof date.Month) {
             this._init(initDate.clone());
@@ -13,27 +21,44 @@
     date.MonthWeeks.prototype.constructor = date.MonthWeeks;
 
 
+    /**
+     * @constructor
+     */
     date.MonthWeeks.prototype._init = function (month) {
         this._month = month;
         this._fit();
     };
 
+    /**
+     * @return {undefined}
+     */
     date.MonthWeeks.prototype._fit = function () {
         this._start = this._month.toStart().toWeek().toStart();
         this._end = this._month.toEnd().toWeek().toEnd();
     };
 
 
+    /**
+     * @return {Number}
+     */
     date.MonthWeeks.prototype.valueOf = function () {
         return this._month.valueOf();
     };
 
 
+    /**
+     * @param {Number} n
+     * @return {date.MonthWeeks}
+     */
     date.MonthWeeks.prototype.toNext = function (n) {
         if (!n) n = 1;
         return new date.MonthWeeks(this._month.toNext(n));
     };
 
+    /**
+     * @param {Number} n
+     * @return {date.MonthWeeks}
+     */
     date.MonthWeeks.prototype.toPrev = function (n) {
         if (!n) n = 1;
         return new date.MonthWeeks(this._month.toPrev(n));

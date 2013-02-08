@@ -1,6 +1,16 @@
 (function (date) {
     "use strict";
 
+    /**
+     * Класс для представления длительности в календарных сущностях (часы, дни, месяцы и т.д.)
+     *
+     * @class Класс для представления длительности в календарных сущностях (часы, дни, месяцы и т.д.)
+     * @augments date.ACommon
+     * @property {Number} _duration Длительность в виде внутренней структуры
+     * @param {date.Duration|date.Interval|Number} arg
+     * @throws Error {Error} если тип аргумент не соответсвует ожидаемому (и не приводится к нему)
+     * @author Max Maximov <max.maximov@gmail.com>
+     */
     date.Duration = function () {
         this._duration;
 
@@ -20,7 +30,7 @@
         } else {
             throw new Error("Unsupported argument type");
         }
-    }
+    };
 
 
     date.Duration.prototype = new date.ACommon();
@@ -30,10 +40,18 @@
     //date.Duration.re = /^(-)?P(?:([0-9]+)W)|((?:([0-9]+)Y)?(?:([0-9]+)M)?(?:([0-9]+)D)?(T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+)S)?)?)$/;
     date.Duration.re = /^(-)?P(?:([0-9]+)Y)?(?:([0-9]+)M)?(?:([0-9]+)D)?(T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+)S)?)?$/;
 
+    /**
+     * @param {String}
+     * @return {Boolean}
+     */
     date.Duration.isParsableAsDuration = function (str) {
         return date.Duration.re.test(str);
-    }
+    };
 
+    /**
+     * @param {String}
+     * @return {date.Duration}
+     */
     date.Duration._parseInterval = function (interval) {
         var start = interval.toStart();
         var end = interval.toEnd();
@@ -65,8 +83,12 @@
         //duration.minutes++;
 
         return duration;
-    }
+    };
 
+    /**
+     * @param {String}
+     * @return {date.Duration}
+     */
     date.Duration._parseIsoString = function (str) {
         var ps = str.match(date.Duration.re);
 
@@ -86,9 +108,14 @@
         }
 
         return duration;
-    }
+    };
 
-    date.Duration.addToDate = function(arg, diff) {
+    /**
+     * @param {date.DateTime} arg
+     * @param {date.Duration|date.Interval|String} diff
+     * @return {date.DateTime}
+     */
+    date.Duration.addToDate = function (arg, diff) {
         var duration;
 
         if (!arg instanceof date.DateTime) {
@@ -111,10 +138,16 @@
     };
 
 
+    /**
+     * @return {undefined}
+     */
     date.Duration.prototype.valueOf = function () {
         //return this._duration;
-    }
+    };
 
+    /**
+     * @return {undefined}
+     */
     date.Duration.prototype.toString = function () {
         //return this._duration;
 
@@ -137,33 +170,54 @@
         }
 
         return result;*/
-    }
+    };
 
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getYears = function () {
         return this._duration.years;
-    }
+    };
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getMonths = function () {
         return this._duration.months;
-    }
+    };
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getDays = function () {
         return this._duration.days;
-    }
+    };
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getHours = function () {
         return this._duration.hours;
-    }
+    };
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getMinutes = function () {
         return this._duration.minutes;
-    }
+    };
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getSeconds = function () {
         return this._duration.seconds;
-    }
+    };
 
+    /**
+     * @return {Number}
+     */
     date.Duration.prototype.getMaxUnit = function () {
         var units = [
             this.getYears(),
@@ -182,5 +236,5 @@
             };
         }
 
-    }
+    };
 })(this.mailru_datetime_ns || this)

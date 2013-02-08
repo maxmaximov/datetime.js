@@ -1,16 +1,21 @@
-;(function (date) {
+(function (date) {
     "use strict";
+
     /**
-     * Имплементация стандартного объекта Date
-     *
-     * @constructor
-     * @memberof date
-     * @param {string|Date|DateTime|int|null} initDate начальная дата
-     * @throws Error {Error} если параметр не смог распарситься встроенным Date
-     *
-     * @return {string} строковое представление текущего времени, e.g. "Wed Apr 04 2012 18:19:07 GMT+0400 (MSK)"
+     * @namespace Неймспейс
+     * @name date
      */
-    date.DateTime = function(initDate) {
+
+    /**
+     * Замена (и прокси) для стандартного объекта Date
+     *
+     * @class Замена стандартному Date
+     * @augments date.ACommon
+     * @param {String|Date|DateTime|int|null} [initDate] начальная дата
+     * @throws {Error} если параметр не смог распарситься встроенным Date
+     * @author Max Maximov <max.maximov@gmail.com>
+     */
+    date.DateTime = function (initDate) {
         if (arguments.length) {
             if (typeof initDate === "undefined") {
                 throw new Error("Incorrect date format");
@@ -106,35 +111,30 @@
 
 
     /**
-     * TODO добавить описание метода
-     *
-     * @param {string} str TODO добавить описание аргумента
-     * @return {boolean} TODO добавить описание возвращаемого значения
+     * @param {String} str
+     * @return {Boolean}
      */
     date.DateTime.isParsableAsDateTime = function (str) {
         return str.toString() !== "" && !isNaN((new Date(str)).valueOf());
-    }
+    };
 
 
     /**
      * Получить таймстамп
      *
      * @override
-     * @return {number} таймстамп
+     * @return {Number} timestamp
      */
-    date.DateTime.prototype.valueOf = function() {
+    date.DateTime.prototype.valueOf = function () {
         //return Math.floor(this._date.valueOf() / 1000);
         return this._date.valueOf();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-
      * @override
-     * @return {string} текстовое представление объекта e.g. "Wed Apr 04 2012 18:19:07 GMT+0400 (MSK)"
+     * @return {String} текстовое представление объекта e.g. "Wed Apr 04 2012 18:19:07 GMT+0400 (MSK)"
      */
-    date.DateTime.prototype.toString = function(format) {
+    date.DateTime.prototype.toString = function (format) {
         if (format) {
             return this.format(format);
         } else {
@@ -143,139 +143,103 @@
     };
 
     /**
-     * TODO добавить описание метода
-     *
-
      * @override
-     * @return {string} текстовое представление объекта в ISO-формате e.g. "2012-07-13T17:42:51+04:00"
+     * @return {String} текстовое представление объекта в ISO-формате e.g. "2012-07-13T17:42:51+04:00"
      */
-    date.DateTime.prototype.toISOString = function() {
+    date.DateTime.prototype.toISOString = function () {
         return this.format(this._format["format"]).replace(/([+-]\d\d)(\d\d)/, "$1:$2");
     };
 
 
     /**
-     * TODO добавить описание метода
      *
-     *
-     * @return {boolean} TODO добавить описание возвращаемого значения
+     * @return {boolean}
      */
-    date.DateTime.prototype.isFloating = function() {
+    date.DateTime.prototype.isFloating = function () {
         return this._format["floating"];
     };
 
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getYear = function() {
+    date.DateTime.prototype.getYear = function () {
         return this._date.getFullYear();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getMonth = function() {
+    date.DateTime.prototype.getMonth = function () {
         return this._date.getMonth() + 1;
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getWeek = function() {
+    date.DateTime.prototype.getWeek = function () {
         var nearestThursdayStart = this.clone().setTime(0, 0, 0).setDayOfMonth(this.getDayOfMonth() + 4 - this.getDayOfWeek());
         var yearStart = nearestThursdayStart.clone().setMonth(1).setDayOfMonth(1);
         return Math.ceil((((nearestThursdayStart - yearStart) / 86400000) + 1) / 7);
-    }
+    };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getDayOfYear = function() {
+    date.DateTime.prototype.getDayOfYear = function () {
         return Math.ceil((this._date - new Date(this._date.getFullYear(), 0, 1)) / 1000 / 60 / 60 / 24);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getDayOfMonth = function() {
+    date.DateTime.prototype.getDayOfMonth = function () {
         return this._date.getDate();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getDayOfWeek = function() {
+    date.DateTime.prototype.getDayOfWeek = function () {
         return this._date.getDay() == 0 ? 7 : this._date.getDay();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getHour = function() {
+    date.DateTime.prototype.getHour = function () {
         return this._date.getHours();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getMinute = function() {
+    date.DateTime.prototype.getMinute = function () {
         return this._date.getMinutes();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {number} TODO добавить описание возвращаемого значения
+     * @return {Number}
      */
-    date.DateTime.prototype.getSecond = function() {
+    date.DateTime.prototype.getSecond = function () {
         return this._date.getSeconds();
     };
 
 
     /**
-     * TODO добавить описание метода
-     * @param {number} arg год
-     *
+     * @param {Number} arg год
      * @return {DateTime}
      */
-    date.DateTime.prototype.setYear = function(arg) {
+    date.DateTime.prototype.setYear = function (arg) {
         this._date.setFullYear(arg);
         return this;
     };
 
     /**
-     * TODO добавить описание метода
-     * @param {number} arg номер месяца
-     *
+     * @param {Number} arg номер месяца
      * @return {DateTime}
      */
-    date.DateTime.prototype.setMonth = function(arg) {
+    date.DateTime.prototype.setMonth = function (arg) {
         if (arg instanceof date.Month) {
             var start = arg.toStart();
             this.setYear(start.getYear()).setMonth(start.getMonth());
@@ -287,12 +251,10 @@
     };
 
     /**
-     * TODO добавить описание метода
-     * @param {number} arg номер недели
-     *
+     * @param {Number} arg номер недели
      * @return {DateTime}
      */
-    date.DateTime.prototype.setWeek = function(arg) {
+    date.DateTime.prototype.setWeek = function (arg) {
         if (arg instanceof date.Week) {
             var start = arg.toStart();
             this.setYear(start.getYear()).setMonth(start.getMonth()).setDayOfMonth(start.getDayOfMonth()).setDayOfWeek(start.getDayOfWeek());
@@ -304,34 +266,29 @@
     };
 
     /**
-     * TODO добавить описание метода
-     * @param {number} arg число в месяце
-     *
+     * @param {Number} arg число в месяце
      * @return {DateTime}
      */
-    date.DateTime.prototype.setDayOfMonth = function(arg) {
+    date.DateTime.prototype.setDayOfMonth = function (arg) {
         this._date.setDate(arg);
         return this;
     };
 
     /**
-     * TODO добавить описание метода
-     * @param {number} arg день недели
-     *
+     * @param {Number} arg день недели
      * @return {DateTime}
      */
-    date.DateTime.prototype.setDayOfWeek = function(arg) {
+    date.DateTime.prototype.setDayOfWeek = function (arg) {
         this.setDayOfMonth(this.getDayOfMonth() - this.getDayOfWeek() + arg);
         return this;
     };
 
     /**
-     * TODO добавить описание метода
-     * @param {number} arg день недели
-     *
+     * @param {Number} arg день недели
      * @return {DateTime}
+     * @throws {Error}
      */
-    date.DateTime.prototype.setDay = function(arg) {
+    date.DateTime.prototype.setDay = function (arg) {
         if (!(arg instanceof date.Day)) {
             throw new Error("Incorrect argument format");
         };
@@ -347,12 +304,12 @@
     /**
      * Установить время
      *
-     * @param {number} hours часы
-     * @param {number} minutes минуты
-     * @param {number} seconds секунды
+     * @param {Number} hours часы
+     * @param {Number} minutes минуты
+     * @param {Number} seconds секунды
      * @return {DateTime}
      */
-    date.DateTime.prototype.setTime = function(hours, minutes, seconds) {
+    date.DateTime.prototype.setTime = function (hours, minutes, seconds) {
         var args = Array.prototype.slice.call(arguments);
         if (args.length > 3) args[3] = 0;
         Date.prototype.setHours.apply(this._date, args);
@@ -362,181 +319,135 @@
     /**
      * Установить часы
      *
-     * @param {number} arg часы
+     * @param {Number} arg часы
      *
      * @return {DateTime}
      */
-    date.DateTime.prototype.setHour = function(arg) {
+    date.DateTime.prototype.setHour = function (arg) {
         this._date.setHours(arg);
         return this;
     };
 
     /**
      * Установить минуты
-     * @param {number} arg минуты
+     * @param {Number} arg минуты
      *
      * @return {DateTime}
      */
-    date.DateTime.prototype.setMinute = function(arg) {
+    date.DateTime.prototype.setMinute = function (arg) {
         this._date.setMinutes(arg);
         return this;
     };
 
     /**
      * Установить секунды
-     * @param {number} arg секунды
+     * @param {Number} arg секунды
      *
      * @return {DateTime}
      */
-    date.DateTime.prototype.setSecond = function(arg) {
+    date.DateTime.prototype.setSecond = function (arg) {
         this._date.setSeconds(arg);
         return this;
     };
 
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.Year}
      */
-    date.DateTime.prototype.toYear = function() {
+    date.DateTime.prototype.toYear = function () {
         return new date.Year(this);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.Month}
      */
-    date.DateTime.prototype.toMonth = function() {
+    date.DateTime.prototype.toMonth = function () {
         return new date.Month(this);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.Week}
      */
-    date.DateTime.prototype.toWeek = function() {
+    date.DateTime.prototype.toWeek = function () {
         return new date.Week(this);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.Date}
      */
-    date.DateTime.prototype.toDay = function() {
+    date.DateTime.prototype.toDay = function () {
         return new date.Day(this);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toStartOfYear = function() {
+    date.DateTime.prototype.toStartOfYear = function () {
         return this.toYear().toStart();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toEndOfYear = function() {
+    date.DateTime.prototype.toEndOfYear = function () {
         return this.toYear().toEnd();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toStartOfMonth = function() {
+    date.DateTime.prototype.toStartOfMonth = function () {
         return this.toMonth().toStart();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toEndOfMonth = function() {
+    date.DateTime.prototype.toEndOfMonth = function () {
         return this.toMonth().toEnd();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toStartOfWeek = function() {
+    date.DateTime.prototype.toStartOfWeek = function () {
         return this.toWeek().toStart();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toEndOfWeek = function() {
+    date.DateTime.prototype.toEndOfWeek = function () {
         return this.toWeek().toEnd();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.toStartOfDay = function() {
+    date.DateTime.prototype.toStartOfDay = function () {
         return this.toDay().toStart();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.DateTime}
      */
-    /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
-     */
-    date.DateTime.prototype.toEndOfDay = function() {
+    date.DateTime.prototype.toEndOfDay = function () {
         return this.toDay().toEnd();
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {date.Interval}
      */
-    date.DateTime.prototype.diff = function(otherDate) {
+    date.DateTime.prototype.diff = function (otherDate) {
         return new date.Interval(this, otherDate);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {date.Period|date.Duration|String} diff
+     * @return {date.DateTime}
+     * @throws {Error}
      */
-    date.DateTime.prototype.add = function(diff) {
+    date.DateTime.prototype.add = function (diff) {
         if (diff instanceof date.Period || date.Period.isParsableAsPeriod(diff)) {
             return this.addPeriod(diff);
         } else if (diff instanceof date.Duration || date.Duration.isParsableAsDuration(diff)) {
@@ -547,32 +458,27 @@
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {date.Period|date.Interval|String} period
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.addPeriod = function(period) {
+    date.DateTime.prototype.addPeriod = function (period) {
         return date.Period.addToDate(this, period);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {date.Duration|date.Interval|String} duration
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.addDuration = function(duration) {
+    date.DateTime.prototype.addDuration = function (duration) {
         return date.Duration.addToDate(this, duration);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {date.Period|date.Duration|String} diff
+     * @return {date.DateTime}
+     * @throws {Error}
      */
-    date.DateTime.prototype.subtract = function(diff) {
+    date.DateTime.prototype.subtract = function (diff) {
         if (diff instanceof date.Period || date.Period.isParsableAsPeriod(diff)) {
             return this.subtractPeriod(diff);
         } else if (diff instanceof date.Duration || date.Duration.isParsableAsDuration(diff)) {
@@ -583,44 +489,35 @@
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {date.Period|date.Interval|String} period
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.subtractPeriod = function(period) {
+    date.DateTime.prototype.subtractPeriod = function (period) {
         return date.Period.subtractFromDate(this, period);
     };
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {date.Duration|date.Interval|String} duration
+     * @return {date.DateTime}
      */
-    date.DateTime.prototype.subtractDuration = function(duration) {
+    date.DateTime.prototype.subtractDuration = function (duration) {
         return date.Duration.subtractFromDate(this, duration);
     };
 
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @return {Boolean}
      */
-    date.DateTime.prototype.equals = function(arg) {
+    date.DateTime.prototype.equals = function (arg) {
         return this.valueOf() === arg.valueOf();
     };
 
 
     /**
-     * TODO добавить описание метода
-     *
-     *
-     * @return {TODO добавить тип возвращаемого значения} TODO добавить описание возвращаемого значения
+     * @param {String} fmt
+     * @return {String}
      */
-    date.DateTime.prototype.format = function(fmt) {
+    date.DateTime.prototype.format = function (fmt) {
         if (!(this.locale in date.DateTime.ext.locales)) {
             if (this.locale.replace(/-[a-zA-Z]+$/, "") in date.DateTime.ext.locales) {
                 this.locale = this.locale.replace(/-[a-zA-Z]+$/, "");
@@ -632,13 +529,13 @@
         var d = this;
 
         while (fmt.match(/%[cDnrRtTxXzZ]/)) {
-            fmt = fmt.replace(/%([cDhnrRtTxXzZ])/g, function(m0, m1) {
+            fmt = fmt.replace(/%([cDhnrRtTxXzZ])/g, function (m0, m1) {
                 var f = date.DateTime.ext.aggregates[m1];
                 return (f == "locale" ? date.DateTime.ext.locales[d.locale][m1] : f);
             });
         }
 
-        var str = fmt.replace(/%([aAbBCdegGHhIjmMpPSuUVwWyYL%])/g, function(m0, m1) {
+        var str = fmt.replace(/%([aAbBCdegGHhIjmMpPSuUVwWyYL%])/g, function (m0, m1) {
             var f = date.DateTime.ext.formats[m1];
             if (typeof f == "string") {
                 return d._date[f]();
@@ -660,7 +557,7 @@
     date.DateTime.ext = {};
     date.DateTime.ext.util = {};
 
-    date.DateTime.ext.util.xPad = function(x, pad, r) {
+    date.DateTime.ext.util.xPad = function (x, pad, r) {
         if (typeof r == "undefined") {
             r = 10;
         }
@@ -676,7 +573,7 @@
      * @property {String} locale Текущая локаль
      * @type String
      */
-    date.DateTime.prototype.locale = "ru-RU";/*(function(){
+    date.DateTime.prototype.locale = "ru-RU";/*(function (){
         var locale = "en_GB",
             navigator = navigator || false,
             process = process || false;
@@ -751,28 +648,28 @@
     date.DateTime.ext.locales["ru-RU"].X = "%r";
 
     date.DateTime.ext.formats = {
-        a: function(d) {
+        a: function (d) {
             return date.DateTime.ext.locales[d.locale].a[d._date.getDay()];
         },
-        A: function(d) {
+        A: function (d) {
             return date.DateTime.ext.locales[d.locale].A[d._date.getDay()];
         },
-        b: function(d) {
+        b: function (d) {
             return date.DateTime.ext.locales[d.locale].b[d._date.getMonth()];
         },
-        B: function(d) {
+        B: function (d) {
             return date.DateTime.ext.locales[d.locale].B[d._date.getMonth()];
         },
         c: "toLocaleString",
-        C: function(d) {
+        C: function (d) {
             return date.DateTime.ext.util.xPad(parseInt(d._date.getFullYear() / 100, 10), 0);
         },
         d: ["getDate", "0"],
         e: ["getDate", ""],
-        g: function(d) {
+        g: function (d) {
             return date.DateTime.ext.util.xPad(parseInt(date.DateTime.ext.util.G(d) / 100, 10), 0);
         },
-        G: function(d) {
+        G: function (d) {
             var y = d._date.getFullYear();
             var V = parseInt(date.DateTime.ext.formats.V(d), 10);
             var W = parseInt(date.DateTime.ext.formats.W(d), 10);
@@ -785,38 +682,38 @@
         },
         H: ["getHours", "0"],
         h: ["getHours", ""],
-        I: function(d) {
+        I: function (d) {
             var I = d._date.getHours() % 12;
             return date.DateTime.ext.util.xPad(I === 0 ? 12 : I, 0);
         },
-        j: function(d) {
+        j: function (d) {
             var ms = d - new date.DateTime("" + d._date.getFullYear() + "/1/1 GMT");
             ms += d._date.getTimezoneOffset() * 60000;
             var doy = parseInt(ms / 60000 / 60 / 24, 10) + 1;
             return date.DateTime.ext.util.xPad(doy, 0, 100);
         },
-        m: function(d) {
+        m: function (d) {
             return date.DateTime.ext.util.xPad(d._date.getMonth() + 1, 0);
         },
         M: ["getMinutes", "0"],
-        p: function(d) {
+        p: function (d) {
             return date.DateTime.ext.locales[d.locale].p[d._date.getHours() >= 12 ? 1 : 0];
         },
-        P: function(d) {
+        P: function (d) {
             return date.DateTime.ext.locales[d.locale].P[d._date.getHours() >= 12 ? 1 : 0];
         },
         S: ["getSeconds", "0"],
-        u: function(d) {
+        u: function (d) {
             var dow = d._date.getDay();
             return dow === 0 ? 7 : dow;
         },
-        U: function(d) {
+        U: function (d) {
             var doy = parseInt(date.DateTime.ext.formats.j(d), 10);
             var rdow = 6 - d._date.getDay();
             var woy = parseInt((doy + rdow) / 7, 10);
             return date.DateTime.ext.util.xPad(woy, 0);
         },
-        V: function(d) {
+        V: function (d) {
             var woy = parseInt(date.DateTime.ext.formats.W(d), 10);
             var dow1_1 = (new date.DateTime("" + d._date.getFullYear() + "/1/1"))._date.getDay();
             var idow = woy + (dow1_1 > 4 || dow1_1 <= 1 ? 0 : 1);
@@ -829,32 +726,32 @@
             return date.DateTime.ext.util.xPad(idow, 0);
         },
         w: "getDay",
-        W: function(d) {
+        W: function (d) {
             var doy = parseInt(date.DateTime.ext.formats.j(d), 10);
             var rdow = 7 - date.DateTime.ext.formats.u(d);
             var woy = parseInt((doy + rdow) / 7, 10);
             return date.DateTime.ext.util.xPad(woy, 0, 10);
         },
-        y: function(d) {
+        y: function (d) {
             return date.DateTime.ext.util.xPad(d._date.getFullYear() % 100, 0);
         },
         Y: "getFullYear",
-        z: function(d) {
+        z: function (d) {
             var o = d._date.getTimezoneOffset();
             var H = date.DateTime.ext.util.xPad(parseInt(Math.abs(o / 60), 10), 0);
             var M = date.DateTime.ext.util.xPad(o % 60, 0);
             return (o > 0 ? "-" : "+") + H + M;
         },
-        Z: function(d) {
+        Z: function (d) {
             return d.toString().replace(/^.*\(([^)]+)\)$/, "$1");
         },
-        L: function(d) {
+        L: function (d) {
             if (date.DateTime.ext.locales[d.locale].L) {
                 return date.DateTime.ext.locales[d.locale].L[d._date.getMonth()];
             }
             return date.DateTime.ext.locales[d.locale].B[d._date.getMonth()];
         },
-        "%": function(d) {
+        "%": function (d) {
             return "%";
         }
     };
